@@ -2,9 +2,41 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Kilometrówki posłów - Sejm X kadencji",
-  description:
-    "Ranking ryczałtów kilometrowych posłów Sejmu RP. Kto deklaruje najwięcej?",
+  title: {
+    default: "Kilometrówki posłów - Sejm X kadencji",
+    template: "%s | Kilometrówki posłów",
+  },
+  description: "Ranking ryczałtów kilometrowych posłów Sejmu RP. Sprawdź, którzy posłowie deklarują najwięcej przejechanych kilometrów i jakie są koszty ich przejazdów w X kadencji Sejmu.",
+  keywords: [
+    "kilometrówki posłów",
+    "ryczałt kilometrowy",
+    "wydatki posłów",
+    "Sejm X kadencji",
+    "Sejm RP",
+    "statystyki posłów",
+    "rozliczenia poselskie",
+    "wydatki na paliwo"
+  ],
+  authors: [{ name: "Jakub Gałosz" }],
+  creator: "Jakub Gałosz",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://kilometrowki.vercel.app"),
+  openGraph: {
+    title: "Kilometrówki posłów - Sejm X kadencji",
+    description: "Ranking ryczałtów kilometrowych posłów Sejmu RP. Kto deklaruje najwięcej?",
+    url: "/",
+    siteName: "Kilometrówki posłów",
+    locale: "pl_PL",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kilometrówki posłów - Sejm X kadencji",
+    description: "Ranking ryczałtów kilometrowych posłów Sejmu RP. Kto deklaruje najwięcej?",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
