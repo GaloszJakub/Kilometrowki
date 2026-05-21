@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import type { MemberSummary } from "@/types";
 import { CLUB_COLORS, CLUB_LOGOS, fmtPln } from "@/lib/constants";
 
-type SortKey = "total" | "car" | "taxi";
+type SortKey = "total" | "car" | "taxi" | "daily";
 
 interface ViewRow {
   member: MemberSummary;
@@ -14,6 +14,7 @@ interface ViewRow {
   car: number;
   taxi: number;
   pdf_url: string | null;
+  daily: number;
 }
 
 function CustomSelect({
@@ -114,11 +115,21 @@ function ClubBadge({ clubId }: { clubId: string }) {
   );
 }
 
-function MobileCard({ mp, rank, total, car, taxi, pdfUrl }: {
+function MobileCard({ mp, rank, total, car, taxi, pdfUrl, year }: {
   mp: MemberSummary; rank: number;
   total: number; car: number; taxi: number; pdfUrl: string | null;
+  year: string;
 }) {
   const router = useRouter();
+
+  const getDaysInYear = (y: number) => {
+    return (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0)) ? 366 : 365;
+  };
+  const days = year === "all"
+    ? mp.years.reduce((acc, y) => acc + getDaysInYear(y.year), 0)
+    : getDaysInYear(parseInt(year));
+  const dailyAvg = days > 0 ? total / days : 0;
+
   return (
     <div
       className="p-4 cursor-pointer transition-colors hover:bg-[var(--c-hover)]"
@@ -150,10 +161,14 @@ function MobileCard({ mp, rank, total, car, taxi, pdfUrl }: {
           </div>
         </div>
       </div>
-      <div className="mt-4 grid grid-cols-3 gap-3">
+      <div className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3">
         <div>
           <div className="text-[10px] uppercase tracking-wider" style={{ color: "var(--c-text-5)" }}>Łącznie</div>
           <div className="font-mono font-medium text-[16px] tabular-nums" style={{ color: "var(--c-text-1)" }}>{fmtPln(total)}</div>
+        </div>
+        <div>
+          <div className="text-[10px] uppercase tracking-wider" style={{ color: "var(--c-text-5)" }}>Śr. dziennie</div>
+          <div className="font-mono font-bold text-[16px] tabular-nums" style={{ color: "var(--c-accent)" }}>{fmtPln(dailyAvg)}</div>
         </div>
         <div>
           <div className="text-[10px] uppercase tracking-wider" style={{ color: "var(--c-text-5)" }}>Auto</div>
@@ -239,6 +254,10 @@ export function RankingTable({ members, year, club, setClub }: Props) {
 
   const filtered = useMemo((): ViewRow[] => {
     const yearNum = year === "all" ? null : parseInt(year);
+    const getDaysInYear = (y: number) => {
+      return (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0)) ? 366 : 365;
+    };
+
     return members
       .filter((m) => {
         if (club !== "all" && m.club !== club) return false;
@@ -247,19 +266,38 @@ export function RankingTable({ members, year, club, setClub }: Props) {
         return true;
       })
       .map((m): ViewRow => {
+        let total = 0;
+        let car = 0;
+        let taxi = 0;
+        let pdf_url: string | null = null;
+        let days = 0;
+
         if (yearNum === null) {
-          return { member: m, total: m.km_total_all_years, car: m.km_car_all_years, taxi: m.km_taxi_all_years, pdf_url: null };
+          total = m.km_total_all_years;
+          car = m.km_car_all_years;
+          taxi = m.km_taxi_all_years;
+          days = m.years.reduce((acc, y) => acc + getDaysInYear(y.year), 0);
+        } else {
+          const yr = m.years.find((y) => y.year === yearNum)!;
+          total = yr.km_total_pln;
+          car = yr.km_car_pln;
+          taxi = yr.km_taxi_pln;
+          pdf_url = yr.pdf_url;
+          days = getDaysInYear(yearNum);
         }
-        const yr = m.years.find((y) => y.year === yearNum)!;
-        return { member: m, total: yr.km_total_pln, car: yr.km_car_pln, taxi: yr.km_taxi_pln, pdf_url: yr.pdf_url };
+
+        const daily = days > 0 ? total / days : 0;
+
+        return { member: m, total, car, taxi, pdf_url, daily };
       })
       .sort((a, b) => dir === "desc" ? b[sort] - a[sort] : a[sort] - b[sort]);
   }, [members, q, club, year, sort, dir]);
 
   const sortCols: [SortKey, string, string][] = [
-    ["total", "Ryczałt łącznie", "text-right pr-3 pb-2 pt-4 w-[160px]"],
-    ["car",   "Auto",            "text-right pr-3 pb-2 pt-4 w-[130px]"],
-    ["taxi",  "Taxi",            "text-right pr-4 pb-2 pt-4 w-[120px]"],
+    ["total", "Ryczałt łącznie", "text-right pr-3 pb-2 pt-4 w-[140px]"],
+    ["daily", "Śr. dziennie",     "text-right pr-3 pb-2 pt-4 w-[120px]"],
+    ["car",   "Auto",            "text-right pr-3 pb-2 pt-4 w-[115px]"],
+    ["taxi",  "Taxi",            "text-right pr-4 pb-2 pt-4 w-[105px]"],
   ];
 
   return (
@@ -371,7 +409,7 @@ export function RankingTable({ members, year, club, setClub }: Props) {
           <tbody>
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={9} className="py-16 text-center text-[14px]" style={{ color: "var(--c-text-5)" }}>
+                <td colSpan={10} className="py-16 text-center text-[14px]" style={{ color: "var(--c-text-5)" }}>
                   Brak posłów spełniających kryteria.
                 </td>
               </tr>
@@ -381,6 +419,7 @@ export function RankingTable({ members, year, club, setClub }: Props) {
               const pdfLinks = row.pdf_url
                 ? [{ year: parseInt(year), url: row.pdf_url }]
                 : mp.years.map((y) => ({ year: y.year, url: y.pdf_url }));
+
               return (
                 <tr
                   key={mp.member_id}
@@ -420,6 +459,11 @@ export function RankingTable({ members, year, club, setClub }: Props) {
                   <td className="py-3.5 pr-3 align-middle text-right">
                     <div className="font-mono font-medium text-[16px] tabular-nums" style={{ color: "var(--c-text-1)" }}>
                       {fmtPln(row.total)}
+                    </div>
+                  </td>
+                  <td className="py-3.5 pr-3 align-middle text-right">
+                    <div className="font-mono font-semibold text-[15px] tabular-nums" style={{ color: "var(--c-accent)" }}>
+                      {fmtPln(row.daily)}
                     </div>
                   </td>
                   <td className="py-3.5 pr-3 align-middle text-right">
@@ -477,7 +521,7 @@ export function RankingTable({ members, year, club, setClub }: Props) {
           </div>
         )}
         {filtered.map((row, i) => (
-          <MobileCard key={row.member.member_id} mp={row.member} rank={i + 1} total={row.total} car={row.car} taxi={row.taxi} pdfUrl={row.pdf_url} />
+          <MobileCard key={row.member.member_id} mp={row.member} rank={i + 1} total={row.total} car={row.car} taxi={row.taxi} pdfUrl={row.pdf_url} year={year} />
         ))}
       </div>
     </section>

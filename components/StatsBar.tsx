@@ -3,6 +3,7 @@ import { fmtPln, fmtNum } from "@/lib/constants";
 
 interface Props {
   stats: Stats;
+  year: string;
 }
 
 function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
@@ -24,7 +25,7 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
         {value}
       </div>
       {sub && (
-        <div className="text-[11px] mt-1" style={{ color: "var(--c-text-5)" }}>
+        <div className="text-[11px] mt-1 font-medium" style={{ color: "var(--c-text-5)" }}>
           {sub}
         </div>
       )}
@@ -32,7 +33,13 @@ function Stat({ label, value, sub }: { label: string; value: string; sub?: strin
   );
 }
 
-export function StatsBar({ stats }: Props) {
+export function StatsBar({ stats, year }: Props) {
+  const getDaysInYear = (y: number) => {
+    return (y % 4 === 0 && (y % 100 !== 0 || y % 400 === 0)) ? 366 : 365;
+  };
+  const totalDays = year === "all" ? (366 + 365) : getDaysInYear(parseInt(year));
+  const dailyTotalCombined = totalDays > 0 ? stats.total_sum_pln / totalDays : 0;
+
   return (
     <div style={{ borderTop: "1px solid var(--c-border)" }}>
       <div className="max-w-[1280px] mx-auto grid grid-cols-2 md:grid-cols-4">
@@ -44,16 +51,17 @@ export function StatsBar({ stats }: Props) {
         <Stat
           label="Suma wypłat"
           value={fmtPln(stats.total_sum_pln)}
-          sub={`Średnio ${fmtPln(stats.avg_mileage_pln)} / poseł`}
+          sub={`Śr. ${fmtPln(stats.avg_mileage_pln)}/poseł • Razem ${fmtPln(dailyTotalCombined)}/dzień`}
         />
         <Stat
           label="Mediana"
           value={fmtPln(stats.median_mileage_pln)}
+          sub="Na posła łącznie"
         />
         <Stat
           label="Najwięcej"
           value={fmtPln(stats.max_mileage_pln)}
-         
+          sub="Rekordowe pobranie"
         />
       </div>
     </div>

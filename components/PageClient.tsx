@@ -84,7 +84,7 @@ export function PageClient({ members, statsByYear }: Props) {
         </div>
       </div>
 
-      <StatsBar stats={stats} />
+      <StatsBar stats={stats} year={year} />
 
       <main className="max-w-[1280px] mx-auto px-5 md:px-8 pt-8 pb-4">
         <ClubChart
