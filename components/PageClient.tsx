@@ -18,6 +18,7 @@ const YEAR_LABELS: Record<string, string> = {
 export function PageClient({ members, statsByYear }: Props) {
   const years = Object.keys(statsByYear).filter((k) => k !== "all").sort();
   const [year, setYear] = useState("all");
+  const [club, setClub] = useState("all");
 
   const stats = statsByYear[year] ?? statsByYear.all;
 
@@ -51,10 +52,14 @@ export function PageClient({ members, statsByYear }: Props) {
       <StatsBar stats={stats} />
 
       <main className="max-w-[1280px] mx-auto px-5 md:px-8 pt-8 pb-4">
-        <ClubChart data={stats.by_club} />
+        <ClubChart
+          data={stats.by_club}
+          selectedClub={club}
+          onClubClick={(c) => setClub((prev) => (prev === c ? "all" : c))}
+        />
       </main>
 
-      <RankingTable members={members} year={year} />
+      <RankingTable members={members} year={year} club={club} setClub={setClub} />
     </>
   );
 }

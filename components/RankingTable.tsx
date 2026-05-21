@@ -175,11 +175,12 @@ function MobileCard({ mp, rank, total, car, taxi, pdfUrl }: {
 interface Props {
   members: MemberSummary[];
   year: string;
+  club: string;
+  setClub: (c: string) => void;
 }
 
-export function RankingTable({ members, year }: Props) {
+export function RankingTable({ members, year, club, setClub }: Props) {
   const [q, setQ] = useState("");
-  const [club, setClub] = useState("all");
   const [sort, setSort] = useState<SortKey>("total");
   const [dir, setDir] = useState<"asc" | "desc">("desc");
 

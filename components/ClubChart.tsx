@@ -6,13 +6,15 @@ import { CLUB_COLORS, CLUB_LOGOS, fmtPln } from "@/lib/constants";
 
 interface Props {
   data: ClubStat[];
+  selectedClub?: string;
+  onClubClick?: (clubId: string) => void;
 }
 
 type Mode = "avg" | "total";
 
 const BAR_AREA_H = 260;
 
-export function ClubChart({ data }: Props) {
+export function ClubChart({ data, selectedClub = "all", onClubClick }: Props) {
   const [mode, setMode] = useState<Mode>("avg");
   const [hovered, setHovered] = useState<string | null>(null);
 
@@ -71,13 +73,18 @@ export function ClubChart({ data }: Props) {
               ? `${(entry.total / 1_000_000).toFixed(1)}M`
               : `${Math.round(entry.total / 1000)}k`;
 
+          const isSelected = selectedClub !== "all" && selectedClub === entry.club_id;
+          const isDimmed = selectedClub !== "all" && selectedClub !== entry.club_id;
+
           return (
             <div
               key={entry.club_id}
               className="relative flex-1 min-w-0 flex flex-col items-center justify-end"
-              style={{ height: "100%", cursor: "default" }}
+              style={{ height: "100%", cursor: onClubClick ? "pointer" : "default" }}
               onMouseEnter={() => setHovered(entry.club_id)}
               onMouseLeave={() => setHovered(null)}
+              onClick={() => onClubClick?.(entry.club_id)}
+              title={isSelected ? `Kliknij, aby odfiltrować ${entry.club_id}` : entry.club_id}
             >
               {/* Floating tooltip — absolutely positioned, doesn't affect bar height */}
               <div
@@ -126,7 +133,9 @@ export function ClubChart({ data }: Props) {
                 style={{
                   height: barPx,
                   background: color,
-                  opacity: hovered && !isHovered ? 0.3 : 0.9,
+                  opacity: isDimmed ? 0.2 : (hovered && !isHovered ? 0.3 : 0.9),
+                  outline: isSelected ? `2px solid ${color}` : "none",
+                  outlineOffset: 2,
                   transition: "height 0.5s cubic-bezier(.4,0,.2,1), opacity 0.15s",
                 }}
               />
@@ -140,8 +149,18 @@ export function ClubChart({ data }: Props) {
         {sorted.map((entry) => {
           const logo = CLUB_LOGOS[entry.club_id];
           const color = CLUB_COLORS[entry.club_id] ?? "#4b5563";
+          const isEntryDimmed = selectedClub !== "all" && selectedClub !== entry.club_id;
           return (
-            <div key={entry.club_id} className="flex-1 min-w-0 flex justify-center">
+            <div
+              key={entry.club_id}
+              className="flex-1 min-w-0 flex justify-center"
+              style={{
+                opacity: isEntryDimmed ? 0.3 : 1,
+                transition: "opacity 0.15s",
+                cursor: onClubClick ? "pointer" : "default",
+              }}
+              onClick={() => onClubClick?.(entry.club_id)}
+            >
               {logo ? (
                 <span
                   className="flex items-center justify-center rounded-sm bg-white w-full"

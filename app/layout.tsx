@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Kilometrówki posłów — Sejm X kadencji",
+  title: "Kilometrówki posłów - Sejm X kadencji",
   description:
     "Ranking ryczałtów kilometrowych posłów Sejmu RP. Kto deklaruje najwięcej?",
 };

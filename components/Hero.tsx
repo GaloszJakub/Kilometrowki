@@ -34,7 +34,7 @@ export function Hero() {
           <span className="font-mono" style={{ color: "var(--c-text-1)" }}>
             1 500 km / mc
           </span>{" "}
-          bez faktur i bez paragonów. Sprawdź, kto bierze najwięcej.
+          bez faktur i bez paragonów. Sprawdź, kto ile bierze.
         </p>
       </div>
     </header>
