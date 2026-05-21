@@ -26,11 +26,13 @@ export function Footer() {
               Kontakt i korekty
             </span>
             <a
-              href="mailto:kontakt@kilometrowki.pl"
+              href="https://github.com/GaloszJakub/Kilometrowki/issues"
+              target="_blank"
+              rel="noopener noreferrer"
               className="text-[12px] hover:underline"
               style={{ color: "var(--c-text-1)" }}
             >
-              kontakt@kilometrowki.pl
+              Zgłoś uwagi / GitHub Issues
             </a>
           </div>
         </div>
