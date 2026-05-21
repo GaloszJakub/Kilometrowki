@@ -15,8 +15,9 @@ export default function RootLayout({
   return (
     <html lang="pl" className="h-full antialiased" suppressHydrationWarning>
       <head>
-        {/* Prevent flash of wrong theme */}
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
         <script
+          id="theme-initializer"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'){document.documentElement.classList.add('dark');document.documentElement.classList.remove('light');}else{document.documentElement.classList.add('light');document.documentElement.classList.remove('dark');}}catch(e){}})();`,
           }}
