@@ -25,43 +25,6 @@ Dane zawierają pozycje z formularza sprawozdania finansowego:
 - **poz. 9** — koszty przejazdów samochodem własnym lub innym
 - **poz. 10** — koszty przejazdów taksówkami
 
-## Stack
-
-| | |
-|---|---|
-| Framework | Next.js 16, App Router, `output: "export"` |
-| Język | TypeScript (strict) |
-| Style | Tailwind CSS v4, CSS variables (dark/light mode) |
-| Wykresy | Custom CSS bar chart |
-
-## Uruchomienie
-
-```bash
-npm install
-npm run dev       # http://localhost:3000
-npm run build     # statyczny build → out/
-```
-
-## Struktura
-
-```
-data/
-  sprawozdania.json       źródło danych (729 sprawozdań)
-components/
-  PageClient.tsx          zakładki lat, globalny stan roku
-  RankingTable.tsx        tabela z filtrowaniem i sortowaniem
-  ClubChart.tsx           wykres słupkowy wg klubu
-  StatsBar.tsx            4 statystyki na górze
-  Hero.tsx                nagłówek strony
-  ThemeToggle.tsx         przełącznik dark / light
-lib/
-  data.ts                 wczytuje JSON, transformuje do MemberSummary[]
-  constants.ts            kolory klubów, loga, formatowanie PLN
-types/
-  index.ts                MemberSummary, YearRecord, Stats, ClubStat
-public/
-  logos/                  SVG/PNG loga klubów poselskich
-```
 
 ## Licencja
 

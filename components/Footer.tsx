@@ -15,8 +15,53 @@ export function Footer() {
             className="mt-3 text-[12px] leading-relaxed"
             style={{ color: "var(--c-text-5)" }}
           >
-            Niezależny projekt monitorujący wydatki publiczne posłów Sejmu RP.
-            Otwarte dane, bez prowizji.
+            Niezależny, apolityczny projekt obywatelski monitorujący wydatki publiczne posłów Sejmu RP.
+            Otwarte dane dla lepszej transparentności.
+          </p>
+          <div className="mt-4">
+            <span
+              className="text-[10px] uppercase tracking-[0.2em] block mb-1"
+              style={{ color: "var(--c-text-6)" }}
+            >
+              Kontakt i korekty
+            </span>
+            <a
+              href="mailto:kontakt@kilometrowki.pl"
+              className="text-[12px] hover:underline"
+              style={{ color: "var(--c-text-1)" }}
+            >
+              kontakt@kilometrowki.pl
+            </a>
+          </div>
+        </div>
+        <div>
+          <div
+            className="text-[10px] uppercase tracking-[0.2em]"
+            style={{ color: "var(--c-text-6)" }}
+          >
+            Źródła & RODO
+          </div>
+          <p
+            className="mt-3 text-[12px] leading-relaxed"
+            style={{ color: "var(--c-text-5)" }}
+          >
+            Dane są agregowane przez serwis{" "}
+            <a
+              href="https://jakglosuja.pl"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:underline"
+              style={{ color: "var(--c-text-1)" }}
+            >
+              jakglosuja.pl
+            </a>{" "}
+            na podstawie oficjalnych sprawozdań finansowych biur poselskich publikowanych przez Kancelarię Sejmu RP.
+          </p>
+          <p
+            className="mt-3 text-[11px] leading-normal"
+            style={{ color: "var(--c-text-5)" }}
+          >
+            Przetwarzanie danych osobowych posłów na Sejm RP odbywa się na podstawie art. 6 ust. 1 lit. f RODO (prawnie uzasadniony interes – jawność i transparentność życia publicznego).
           </p>
         </div>
         <div>
@@ -24,43 +69,13 @@ export function Footer() {
             className="text-[10px] uppercase tracking-[0.2em]"
             style={{ color: "var(--c-text-6)" }}
           >
-            Źródła danych
-          </div>
-          <ul className="mt-3 space-y-1.5 text-[13px]" style={{ color: "var(--c-text-4)" }}>
-            <li>
-              ·{" "}
-              <a
-                href="https://jakglosuja.pl"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition-colors"
-                style={{ color: "var(--c-text-1)" }}
-                onMouseEnter={(e) =>
-                  (e.currentTarget.style.color = "var(--c-accent)")
-                }
-                onMouseLeave={(e) =>
-                  (e.currentTarget.style.color = "var(--c-text-1)")
-                }
-              >
-                jakglosuja.pl
-              </a>{" "}
-              
-            </li>
-          </ul>
-        </div>
-        <div>
-          <div
-            className="text-[10px] uppercase tracking-[0.2em]"
-            style={{ color: "var(--c-text-6)" }}
-          >
-            Zastrzeżenia
+            Zastrzeżenia prawne
           </div>
           <p
             className="mt-3 text-[12px] leading-relaxed"
             style={{ color: "var(--c-text-5)" }}
           >
-            Dane mają charakter{" "}
-            <span style={{ color: "var(--c-text-1)" }}>poglądowy</span>.
+            Prezentowane informacje mają charakter wyłącznie <span style={{ color: "var(--c-text-1)" }}>poglądowy i edukacyjny</span>. Autor serwisu dokłada wszelkich starań, aby dane były rzetelne, lecz nie ponosi odpowiedzialności za dokładność sprawozdań źródłowych ani skutki ewentualnych pomyłek. Pełne, wiążące sprawozdania znajdują się na stronach <a href="https://www.sejm.gov.pl" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: "var(--c-text-1)" }}>sejm.gov.pl</a>.
           </p>
         </div>
       </div>
@@ -69,8 +84,8 @@ export function Footer() {
           className="max-w-[1280px] mx-auto px-5 md:px-8 py-4 flex flex-col md:flex-row justify-between gap-2 text-[11px] uppercase tracking-wider"
           style={{ color: "var(--c-text-6)" }}
         >
-          <span>© 2025 kilometrówki.pl · CC BY 4.0</span>
-          <span>Dane: jakglosuja.pl</span>
+          <span>© 2026 kilometrówki.pl · CC BY 4.0</span>
+          <span>Dane: Sejm RP / jakglosuja.pl</span>
         </div>
       </div>
     </footer>
