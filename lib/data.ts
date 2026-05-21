@@ -53,6 +53,11 @@ export function getData(): { members: MemberSummary[]; statsByYear: Record<strin
         const item10 = itemMap.get(10);
         const km_car_pln = item9 && item9.label.toLowerCase().includes("przejazd") ? item9.amount_pln : 0;
         const km_taxi_pln = item10 && item10.label.toLowerCase().includes("przejazd") ? item10.amount_pln : 0;
+        const items = rec.items.map((i) => ({
+          number: i.number,
+          label: i.label,
+          amount_pln: i.amount_pln,
+        }));
         return {
           year: rec.report_year,
           km_car_pln,
@@ -60,6 +65,7 @@ export function getData(): { members: MemberSummary[]; statsByYear: Record<strin
           km_total_pln: km_car_pln + km_taxi_pln,
           total_pln: rec.total_pln,
           pdf_url: rec.pdf_url,
+          items,
         };
       })
       .sort((a, b) => a.year - b.year);

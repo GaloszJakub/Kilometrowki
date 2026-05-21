@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { MemberSummary, Stats } from "@/types";
 import { StatsBar } from "./StatsBar";
 import { ClubChart } from "./ClubChart";
@@ -20,6 +20,41 @@ export function PageClient({ members, statsByYear }: Props) {
   const [year, setYear] = useState("all");
   const [club, setClub] = useState("all");
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const y = params.get("year");
+      const c = params.get("club");
+      if (y) setYear(y);
+      if (c) setClub(c);
+    }
+  }, []);
+
+  const updateParams = (newYear: string, newClub: string) => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (newYear === "all") params.delete("year");
+      else params.set("year", newYear);
+
+      if (newClub === "all") params.delete("club");
+      else params.set("club", newClub);
+
+      const qs = params.toString();
+      const newUrl = qs ? `?${qs}` : window.location.pathname;
+      window.history.replaceState({ ...window.history.state }, "", newUrl);
+    }
+  };
+
+  const handleSetYear = (y: string) => {
+    setYear(y);
+    updateParams(y, club);
+  };
+
+  const handleSetClub = (c: string) => {
+    setClub(c);
+    updateParams(year, c);
+  };
+
   const stats = statsByYear[year] ?? statsByYear.all;
 
   return (
@@ -33,7 +68,7 @@ export function PageClient({ members, statsByYear }: Props) {
             return (
               <button
                 key={y}
-                onClick={() => setYear(y)}
+                onClick={() => handleSetYear(y)}
                 className="relative px-5 py-2.5 text-[12px] uppercase tracking-[0.14em] font-medium transition-colors cursor-pointer"
                 style={{
                   color: active ? "var(--c-text-1)" : "var(--c-text-4)",
@@ -55,11 +90,11 @@ export function PageClient({ members, statsByYear }: Props) {
         <ClubChart
           data={stats.by_club}
           selectedClub={club}
-          onClubClick={(c) => setClub((prev) => (prev === c ? "all" : c))}
+          onClubClick={(c) => handleSetClub(club === c ? "all" : c)}
         />
       </main>
 
-      <RankingTable members={members} year={year} club={club} setClub={setClub} />
+      <RankingTable members={members} year={year} club={club} setClub={handleSetClub} />
     </>
   );
 }

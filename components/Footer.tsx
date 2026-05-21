@@ -16,7 +16,6 @@ export function Footer() {
             style={{ color: "var(--c-text-5)" }}
           >
             Niezależny, apolityczny projekt obywatelski monitorujący wydatki publiczne posłów Sejmu RP.
-            Otwarte dane dla lepszej transparentności.
           </p>
           <div className="mt-4">
             <span

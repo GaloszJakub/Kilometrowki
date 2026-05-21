@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useMemo, useRef, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type { MemberSummary } from "@/types";
 import { CLUB_COLORS, CLUB_LOGOS, fmtPln } from "@/lib/constants";
 
@@ -116,8 +118,16 @@ function MobileCard({ mp, rank, total, car, taxi, pdfUrl }: {
   mp: MemberSummary; rank: number;
   total: number; car: number; taxi: number; pdfUrl: string | null;
 }) {
+  const router = useRouter();
   return (
-    <div className="p-4" style={{ borderTop: "1px solid var(--c-border)" }}>
+    <div
+      className="p-4 cursor-pointer transition-colors hover:bg-[var(--c-hover)]"
+      style={{ borderTop: "1px solid var(--c-border)" }}
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest("a")) return;
+        router.push(`/posel/${mp.member_id}`);
+      }}
+    >
       <div className="flex items-start gap-3">
         <div
           className="font-mono text-3xl font-bold leading-none w-9 shrink-0 tabular-nums"
@@ -154,19 +164,31 @@ function MobileCard({ mp, rank, total, car, taxi, pdfUrl }: {
           <div className="font-mono text-[15px] tabular-nums" style={{ color: "var(--c-text-1)" }}>{fmtPln(taxi)}</div>
         </div>
       </div>
-      <div className="mt-2 flex gap-2 flex-wrap">
-        {(pdfUrl ? [{ url: pdfUrl }] : mp.years.map((y) => ({ url: y.pdf_url, year: y.year }))).map((p, idx) => (
-          <a
-            key={idx}
-            href={p.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[10px] uppercase tracking-wider px-2 py-0.5 transition-colors"
-            style={{ border: "1px solid var(--c-border)", color: "var(--c-text-4)" }}
-          >
-            PDF{"year" in p ? ` ${p.year}` : ""}
-          </a>
-        ))}
+      <div className="mt-2.5 flex items-center justify-between gap-2 flex-wrap">
+        <div className="flex gap-1.5 flex-wrap">
+          {(pdfUrl ? [{ url: pdfUrl }] : mp.years.map((y) => ({ url: y.pdf_url, year: y.year }))).map((p, idx) => (
+            <a
+              key={idx}
+              href={p.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[10px] uppercase tracking-wider px-2 py-0.5 transition-colors"
+              style={{ border: "1px solid var(--c-border)", color: "var(--c-text-4)" }}
+            >
+              PDF{"year" in p ? ` ${p.year}` : ""}
+            </a>
+          ))}
+        </div>
+        <Link
+          href={`/posel/${mp.member_id}`}
+          className="inline-flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-wider px-3 py-1.5 font-bold transition-all hover:brightness-110 whitespace-nowrap shrink-0"
+          style={{ background: "var(--c-accent)", color: "#fff" }}
+        >
+          Szczegóły
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="shrink-0">
+            <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </Link>
       </div>
     </div>
   );
@@ -180,9 +202,30 @@ interface Props {
 }
 
 export function RankingTable({ members, year, club, setClub }: Props) {
+  const router = useRouter();
   const [q, setQ] = useState("");
   const [sort, setSort] = useState<SortKey>("total");
   const [dir, setDir] = useState<"asc" | "desc">("desc");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const query = params.get("q");
+      if (query) setQ(query);
+    }
+  }, []);
+
+  const handleSetQ = (val: string) => {
+    setQ(val);
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (!val.trim()) params.delete("q");
+      else params.set("q", val);
+      const qs = params.toString();
+      const newUrl = qs ? `?${qs}` : window.location.pathname;
+      window.history.replaceState({ ...window.history.state }, "", newUrl);
+    }
+  };
 
   function handleSort(key: SortKey) {
     if (key === sort) setDir((d) => (d === "desc" ? "asc" : "desc"));
@@ -242,13 +285,13 @@ export function RankingTable({ members, year, club, setClub }: Props) {
             </svg>
             <input
               value={q}
-              onChange={(e) => setQ(e.target.value)}
+              onChange={(e) => handleSetQ(e.target.value)}
               placeholder="Szukaj posła…"
               className="bg-transparent px-2 py-2 text-[14px] w-full focus:outline-none placeholder:text-[var(--c-text-5)]"
               style={{ color: "var(--c-text-1)" }}
             />
             {q && (
-              <button onClick={() => setQ("")} style={{ color: "var(--c-text-4)" }} className="px-2">
+              <button onClick={() => handleSetQ("")} style={{ color: "var(--c-text-4)" }} className="px-2">
                 ×
               </button>
             )}
@@ -322,12 +365,13 @@ export function RankingTable({ members, year, club, setClub }: Props) {
                 </th>
               ))}
               <th className="text-right font-medium pr-4 pb-2 pt-4 w-[60px]">PDF</th>
+              <th className="text-right font-medium pr-4 pb-2 pt-4 w-[110px]">Szczegóły</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={8} className="py-16 text-center text-[14px]" style={{ color: "var(--c-text-5)" }}>
+                <td colSpan={9} className="py-16 text-center text-[14px]" style={{ color: "var(--c-text-5)" }}>
                   Brak posłów spełniających kryteria.
                 </td>
               </tr>
@@ -340,10 +384,14 @@ export function RankingTable({ members, year, club, setClub }: Props) {
               return (
                 <tr
                   key={mp.member_id}
-                  className="transition-colors"
+                  className="transition-colors cursor-pointer"
                   style={{ borderTop: "1px solid var(--c-border)" }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--c-surface)")}
+                  onMouseEnter={(e) => (e.currentTarget.style.background = "var(--c-hover)")}
                   onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                  onClick={(e) => {
+                    if ((e.target as HTMLElement).closest("a")) return;
+                    router.push(`/posel/${mp.member_id}`);
+                  }}
                 >
                   <td className="py-3.5 pl-3 pr-2 align-middle">
                     <span className="font-mono text-2xl font-bold tabular-nums" style={{ color: "var(--c-text-6)" }}>
@@ -401,6 +449,18 @@ export function RankingTable({ members, year, club, setClub }: Props) {
                         </a>
                       ))}
                     </div>
+                  </td>
+                  <td className="py-3.5 pr-4 align-middle text-right">
+                    <Link
+                      href={`/posel/${mp.member_id}`}
+                      className="inline-flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-wider px-3 py-1.5 font-bold transition-all hover:brightness-110 whitespace-nowrap shrink-0"
+                      style={{ background: "var(--c-accent)", color: "#fff" }}
+                    >
+                      Szczegóły
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="shrink-0">
+                        <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </Link>
                   </td>
                 </tr>
               );

@@ -1,3 +1,9 @@
+export interface ExpenseItem {
+  number: number;
+  label: string;
+  amount_pln: number;
+}
+
 export interface YearRecord {
   year: number;
   km_car_pln: number;
@@ -5,6 +11,7 @@ export interface YearRecord {
   km_total_pln: number;
   total_pln: number;
   pdf_url: string;
+  items: ExpenseItem[];
 }
 
 export interface MemberSummary {

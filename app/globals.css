@@ -1,8 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap");
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* Light theme (default) */
-:root {
+:root, html.light {
   --c-bg:       #f9fafb;
   --c-surface:  #ffffff;
   --c-surface2: #f3f4f6;

@@ -26,16 +26,7 @@ export function Hero() {
           <br />
           <span style={{ color: "var(--c-accent)" }}>posłów.</span>
         </h1>
-        <p
-          className="mt-5 max-w-[60ch] text-[16px] md:text-[18px]"
-          style={{ color: "var(--c-text-2)" }}
-        >
-          Posłowie rozliczają do{" "}
-          <span className="font-mono" style={{ color: "var(--c-text-1)" }}>
-            1 500 km / mc
-          </span>{" "}
-          bez faktur i bez paragonów. Sprawdź, kto ile bierze.
-        </p>
+       
       </div>
     </header>
   );
