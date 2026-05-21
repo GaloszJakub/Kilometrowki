@@ -6,11 +6,10 @@ interface Props {
   year: string;
 }
 
-function Stat({ label, value, sub }: { label: string; value: string; sub?: string }) {
+function Stat({ label, value, sub, className }: { label: string; value: string; sub?: string; className?: string }) {
   return (
     <div
-      className="px-5 py-4 last:border-r-0"
-      style={{ borderRight: "1px solid var(--c-border)" }}
+      className={`px-5 py-4 border-r border-[var(--c-border)] last:border-r-0 ${className ?? ""}`}
     >
       <div
         className="text-[10px] uppercase tracking-[0.18em]"
@@ -42,7 +41,7 @@ export function StatsBar({ stats, year }: Props) {
 
   return (
     <div style={{ borderTop: "1px solid var(--c-border)" }}>
-      <div className="max-w-[1280px] mx-auto grid grid-cols-2 md:grid-cols-4">
+      <div className="max-w-[1280px] mx-auto grid grid-cols-2 md:grid-cols-5">
         <Stat
           label="Posłów w bazie"
           value={fmtNum(stats.total_members_with_data)}
@@ -51,7 +50,7 @@ export function StatsBar({ stats, year }: Props) {
         <Stat
           label="Suma wypłat"
           value={fmtPln(stats.total_sum_pln)}
-          sub={`Śr. ${fmtPln(stats.avg_mileage_pln)}/poseł • Razem ${fmtPln(dailyTotalCombined)}/dzień`}
+          sub={`Śr. ${fmtPln(stats.avg_mileage_pln)}/poseł`}
         />
         <Stat
           label="Mediana"
@@ -62,6 +61,12 @@ export function StatsBar({ stats, year }: Props) {
           label="Najwięcej"
           value={fmtPln(stats.max_mileage_pln)}
           sub="Rekordowe pobranie"
+        />
+        <Stat
+          label="Średnio na dzień"
+          value={fmtPln(dailyTotalCombined)}
+          sub="Suma wszystkich posłów"
+          className="col-span-2 md:col-span-1"
         />
       </div>
     </div>
