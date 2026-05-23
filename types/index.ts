@@ -1,7 +1,13 @@
+export interface Subcategory {
+  label: string;
+  amount_pln: number;
+}
+
 export interface ExpenseItem {
   number: number;
   label: string;
   amount_pln: number;
+  subcategories?: Subcategory[] | null;
 }
 
 export interface YearRecord {

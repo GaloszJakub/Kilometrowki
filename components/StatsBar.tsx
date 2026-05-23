@@ -58,9 +58,9 @@ export function StatsBar({ stats, year }: Props) {
           sub="Na posła łącznie"
         />
         <Stat
-          label="Najwięcej"
+          label="Maksymalny ryczałt"
           value={fmtPln(stats.max_mileage_pln)}
-          sub="Rekordowe pobranie"
+          sub="Najwyższy roczny wydatek"
         />
         <Stat
           label="Średnio na dzień"

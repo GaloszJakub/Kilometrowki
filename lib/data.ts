@@ -6,6 +6,7 @@ interface RawItem {
   number: number;
   label: string;
   amount_pln: number;
+  subcategories?: { label: string; amount_pln: number }[] | null;
 }
 
 interface RawRecord {
@@ -57,6 +58,7 @@ export function getData(): { members: MemberSummary[]; statsByYear: Record<strin
           number: i.number,
           label: i.label,
           amount_pln: i.amount_pln,
+          subcategories: i.subcategories || null,
         }));
         return {
           year: rec.report_year,

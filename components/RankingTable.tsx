@@ -132,13 +132,18 @@ function MobileCard({ mp, rank, total, car, taxi, pdfUrl, year }: {
 
   return (
     <div
-      className="p-4 cursor-pointer transition-colors hover:bg-[var(--c-hover)]"
+      className="p-4 cursor-pointer transition-colors hover:bg-[var(--c-hover)] relative"
       style={{ borderTop: "1px solid var(--c-border)" }}
       onClick={(e) => {
         if ((e.target as HTMLElement).closest("a")) return;
         router.push(`/posel/${mp.member_id}`);
       }}
     >
+      <Link
+        href={`/posel/${mp.member_id}`}
+        className="absolute inset-0 z-10"
+        aria-label={`Szczegóły posła ${mp.name}`}
+      />
       <div className="flex items-start gap-3">
         <div
           className="font-mono text-3xl font-bold leading-none w-9 shrink-0 tabular-nums"
@@ -151,7 +156,7 @@ function MobileCard({ mp, rank, total, car, taxi, pdfUrl, year }: {
             href={`https://www.sejm.gov.pl/Sejm10.nsf/posel.xsp?id=${mp.member_id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="font-display text-[17px] font-semibold leading-tight truncate hover:underline"
+            className="font-display text-[17px] font-semibold leading-tight truncate hover:underline relative z-20"
             style={{ color: "var(--c-text-1)" }}
           >
             {mp.name}
@@ -187,7 +192,7 @@ function MobileCard({ mp, rank, total, car, taxi, pdfUrl, year }: {
               href={p.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[10px] uppercase tracking-wider px-2 py-0.5 transition-colors"
+              className="text-[10px] uppercase tracking-wider px-2 py-0.5 transition-colors relative z-20"
               style={{ border: "1px solid var(--c-border)", color: "var(--c-text-4)" }}
             >
               PDF{"year" in p ? ` ${p.year}` : ""}
@@ -196,7 +201,7 @@ function MobileCard({ mp, rank, total, car, taxi, pdfUrl, year }: {
         </div>
         <Link
           href={`/posel/${mp.member_id}`}
-          className="inline-flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-wider px-3 py-1.5 font-bold transition-all hover:brightness-110 whitespace-nowrap shrink-0"
+          className="inline-flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-wider px-3 py-1.5 font-bold transition-all hover:brightness-110 whitespace-nowrap shrink-0 relative z-20"
           style={{ background: "var(--c-accent)", color: "#fff" }}
         >
           Szczegóły
@@ -423,7 +428,7 @@ export function RankingTable({ members, year, club, setClub }: Props) {
               return (
                 <tr
                   key={mp.member_id}
-                  className="transition-colors cursor-pointer"
+                  className="transition-colors cursor-pointer relative"
                   style={{ borderTop: "1px solid var(--c-border)" }}
                   onMouseEnter={(e) => (e.currentTarget.style.background = "var(--c-hover)")}
                   onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
@@ -442,7 +447,7 @@ export function RankingTable({ members, year, club, setClub }: Props) {
                       href={`https://www.sejm.gov.pl/Sejm10.nsf/posel.xsp?id=${mp.member_id}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="font-display text-[16px] font-semibold leading-tight hover:underline"
+                      className="font-display text-[16px] font-semibold leading-tight hover:underline relative z-20"
                       style={{ color: "var(--c-text-1)" }}
                     >
                       {mp.name}
@@ -484,7 +489,7 @@ export function RankingTable({ members, year, club, setClub }: Props) {
                           href={p.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 transition-colors"
+                          className="text-[10px] uppercase tracking-wider px-1.5 py-0.5 transition-colors relative z-20"
                           style={{ border: "1px solid var(--c-border)", color: "var(--c-text-4)" }}
                           onMouseEnter={(e) => (e.currentTarget.style.color = "var(--c-accent)")}
                           onMouseLeave={(e) => (e.currentTarget.style.color = "var(--c-text-4)")}
@@ -497,7 +502,12 @@ export function RankingTable({ members, year, club, setClub }: Props) {
                   <td className="py-3.5 pr-4 align-middle text-right">
                     <Link
                       href={`/posel/${mp.member_id}`}
-                      className="inline-flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-wider px-3 py-1.5 font-bold transition-all hover:brightness-110 whitespace-nowrap shrink-0"
+                      className="absolute inset-0 z-10"
+                      aria-label={`Szczegóły posła ${mp.name}`}
+                    />
+                    <Link
+                      href={`/posel/${mp.member_id}`}
+                      className="inline-flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-wider px-3 py-1.5 font-bold transition-all hover:brightness-110 whitespace-nowrap shrink-0 relative z-20"
                       style={{ background: "var(--c-accent)", color: "#fff" }}
                     >
                       Szczegóły

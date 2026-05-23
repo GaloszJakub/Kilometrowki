@@ -267,6 +267,18 @@ export function MemberDetailsClient({ member }: Props) {
                             </td>
                             <td className="py-3.5 pr-4 text-[13px] md:text-[14px] leading-relaxed" style={{ color: "var(--c-text-1)" }}>
                               <span className={isTravel ? "font-bold" : ""}>{item.label}</span>
+                              {item.subcategories && item.subcategories.length > 0 && (
+                                <ul className="mt-2.5 pl-3.5 border-l-2 border-[var(--c-border)] space-y-1.5">
+                                  {item.subcategories.map((sub, idx) => (
+                                    <li key={idx} className="flex items-baseline justify-between gap-4 text-[12px]" style={{ color: "var(--c-text-3)" }}>
+                                      <span className="font-normal">{sub.label}</span>
+                                      <span className="font-mono font-medium tabular-nums text-right shrink-0" style={{ color: "var(--c-text-2)" }}>
+                                        {fmtPln(sub.amount_pln)}
+                                      </span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
                             </td>
                             <td className="py-3.5 text-right font-mono font-medium text-[14px] md:text-[15px] tabular-nums pr-4" style={{ color: isTravel ? "var(--c-accent)" : "var(--c-text-1)" }}>
                               {fmtPln(item.amount_pln)}
